@@ -1,0 +1,10 @@
+:root{
+    --varWidth: 100% !important;
+}
+.choose__image__preview{
+    width: var(--varWidth);
+    height: calc(var(--varWidth) * 9 / 16);
+}
+.choose__image__preview img{
+    object-fit: contain !important;
+}

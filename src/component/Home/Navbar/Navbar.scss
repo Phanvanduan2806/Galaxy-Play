@@ -1,0 +1,35 @@
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0 ;
+    left: auto !important;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 10rem;
+    padding: 0rem 0;
+    margin: 0.125rem 0 0;
+    font-size: 0.85rem;
+    color: white !important;
+    text-align: left;
+    list-style: none;
+    background-color: black;
+    background-clip: padding-box;
+    border: none !important;
+    border-radius: 0;
+}
+.dropdowns:hover  .dropdown-menu{
+    display: block;
+}
+.dropdown-item{
+    padding: 15px 20px;
+    color: white;
+    font-weight: 600;
+}
+.dropdown-menu li{
+    padding: 0%;
+}
+.dropdown-divider{
+    margin: 0;
+    border-top: 0.3px solid #eaecf4;
+}

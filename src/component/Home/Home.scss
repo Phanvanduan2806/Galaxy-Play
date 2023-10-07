@@ -1,0 +1,355 @@
+// Root scroll
+::-webkit-scrollbar {
+  background-color: transparent !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+
+// -----------------------------------------
+.navbar-brand {
+  height: 50px;
+}
+
+.home__navbar {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  transition: all 1s ease;
+}
+.home__navbar:hover{
+  background-color: rgba(0, 0, 0, 1) !important;
+}
+
+.nav__btn__search {
+  border-radius: 20px;
+  border: 1px solid white;
+  color: white;
+  padding: 7px 20px;
+}
+
+/* The switch - the box around the slider----------------------- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  margin-bottom: 0 !important;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.slider {
+  background-color: #2196F3;
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(23px);
+  -ms-transform: translateX(23px);
+  transform: translateX(23px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+// End button switch ---------------------------
+// Slide 
+// .detail-movie-page{
+//   margin-top: 60px !important;
+// }
+
+.my__btn {
+  height: 40px;
+  padding: 0px 1rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.my__btn:hover {
+  background-color: #ccc;
+}
+
+.carousel-caption {
+  position: absolute;
+  width: 30%;
+  bottom: 50%;
+  transform: translateY(50%);
+  left: 5%;
+  z-index: 10;
+  color: #fff;
+}
+
+.carousel__des {
+  color: white;
+  font-size: 13px;
+  text-align: left;
+  padding: 5px;
+}
+
+.carousel__movies__title {
+  font-size: 60px !important;
+  padding: 10px;
+  text-align: left;
+  font-family: 'Imbue', serif;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Imbue:opsz,wght@10..100,200&display=swap');
+
+.carousel-control-next,
+.carousel-control-prev {
+  position: absolute;
+  color: #fff;
+  opacity: 1 !important;
+  transition: opacity .15s ease;
+  width: 40px;
+  height: 40px;
+  border: 1px solid white;
+  border-radius: 50%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-control-prev:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.carousel-control-next:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.carousel__btn__np {
+  position: absolute;
+  bottom: 20PX;
+  width: 100px;
+  height: 50px;
+  z-index: 1;
+  right: 20px;
+}
+
+.ribbon-landscape {
+  background-color: black;
+}
+
+.landscape__title {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.landscape__carousel__title {
+  font-size: 20px;
+  color: white;
+  font-weight: bolder;
+  margin-bottom: 0 !important;
+}
+
+.card {
+  border: none !important;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+// ----------------------------------ribbon-landscape-----------------------------------
+.ribbon-landscape {
+  margin: 0 !important;
+}
+
+.scrolling-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.card-block {
+  height: 150px;
+  background-color: gray;
+  border: none;
+  background-position: center;
+  background-size: cover;
+  transition: all 0.3s ease-in-out !important;
+  border-radius: 0.5rem;
+  position: relative;
+
+  &:hover {
+    opacity: 0.9;
+    // transform: ;
+    transform: translateY(-10px) translateX(10px) scale(1.2);
+    z-index: 1;
+  }
+
+  // img {
+  //   object-fit: fill;
+  // }
+
+  .card-block-hover {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: space-evenly;
+    position: absolute;
+    align-items: center;
+    visibility: hidden;
+    cursor: pointer;
+
+    i {
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+    }
+  }
+
+  .card-block-des {
+    position: absolute;
+    height: 70px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    visibility: hidden;
+
+    .card-block-des-title {
+      color: white;
+      margin: 0 !important;
+      padding: 0px 10px !important;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .card-block-des-more {
+      display: flex;
+    }
+
+    .card-block-des-more p {
+      display: flex;
+      color: white;
+      margin: 0 !important;
+      padding: 5px;
+      font-size: 0.6rem;
+    }
+  }
+}
+
+.play__movies {
+  font-size: 30px !important;
+
+}
+
+.card-block:hover .card-block-hover {
+  visibility: visible;
+}
+.card-block:hover .card-block-des {
+  visibility: visible;
+}
+
+.scrolling-wrapper {
+  margin: 0 !important;
+}
+
+.ribbon-landscape {
+  position: relative;
+  padding: 1rem;
+}
+
+.btn__scroll {
+  position: absolute;
+  z-index: 1;
+  outline: none;
+  border: none;
+  width: 70px;
+  background-color: transparent;
+  top: 40px;
+}
+
+.btn__scroll__next {
+  right: 0;
+  bottom: 0;
+}
+
+.btn__scroll__prev {
+  left: 0;
+  bottom: 0;
+}
+
+.btn__scroll i {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.btn__scroll:hover i {
+  font-size: 2rem;
+}
+
+.col__scroll {
+  padding-right: 0.3rem !important;
+  padding-left: 0.3rem !important;
+}
+.ribon-landscape-title{
+  margin-left: 2rem !important;
+}
+.bg-login {
+  background-image:url("../../../images/bg-onboarding.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+.card{
+  background-color: transparent !important;
+}
+.form-control{
+  background-color: transparent;
+}
