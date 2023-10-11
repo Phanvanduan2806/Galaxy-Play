@@ -18,9 +18,21 @@ function Users() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const [vip, setVip] = useState(0);
   const [errors, setErrors] = useState({});
   const [edit, setEdit] = useState(null);
   const [userId, setUserId] = useState(null);
+  // Phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+
+  const CurrentPage = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return users.slice(startIndex, endIndex);
+  };
+  const toShow = CurrentPage();
 
   // Bộ sưu tập user
   useEffect(() => {
@@ -73,6 +85,9 @@ function Users() {
       if (!password) {
         newErrors.password = "Vui lòng nhập mật khẩu";
       }
+      if (!vip) {
+        newErrors.vip = "Vui lòng nhập thông tin";
+      }
       if (Object.keys(newErrors).length === 0) {
         // Nếu email chưa tồn tại, thêm người dùng mới vào cơ sở dữ liệu
         await addDoc(usersCollectionRef, {
@@ -80,6 +95,7 @@ function Users() {
           email: email,
           password: password,
           role: role,
+          vip: vip,
         });
 
         // Cập nhật trạng thái và làm sạch các trường dữ liệu
@@ -87,6 +103,7 @@ function Users() {
         setEmail("");
         setPassword("");
         setRole("");
+        setVip(0);
         setCheckUpload(!checkUpload);
         alert("Thêm người dùng thành công!");
       } else {
@@ -99,12 +116,13 @@ function Users() {
   };
 
   // Edit User
-  const editUser = (id, name, email, password, role) => {
+  const editUser = (id, name, email, password, role, vip) => {
     setUserId(id);
     setName(name);
     setEmail(email);
     setPassword(password);
     setRole(role);
+    setVip(vip);
     setErrors({}); // Xóa các lỗi khi bạn bắt đầu chỉnh sửa
   };
 
@@ -128,6 +146,9 @@ function Users() {
         await updateDoc(doc(usersCollectionRef, userId), {
           name: name,
           role: role,
+          email: email,
+          password: password,
+          vip: vip,
         });
 
         // Cập nhật trạng thái và làm sạch các trường dữ liệu
@@ -135,6 +156,7 @@ function Users() {
         setRole("");
         setEmail("");
         setPassword("");
+        setVip(0);
         setUserId(""); // Xóa userId để sử dụng cho lần cập nhật tiếp theo (nếu có)
         setCheckUpload(!checkUpload);
         alert("Cập nhật thành công");
@@ -192,17 +214,21 @@ function Users() {
             <th scope="col">Email</th>
             <th scope="col">Password</th>
             <th scope="col">Vai trò</th>
+            <th scope="col">Gói Vip</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
-            <tr>
-              <th scope="row">{index + 1}</th>
+          {toShow.map((user, index) => (
+            <tr key={user.id}>
+              <th scope="row">
+                {index + 1 + (currentPage - 1) * itemsPerPage}
+              </th>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.password}</td>
               <td>{user.role}</td>
+              <td>Vip {user.vip}</td>
               <td className="td__action">
                 <button
                   className="btn btn-primary"
@@ -214,7 +240,8 @@ function Users() {
                       user.name,
                       user.email,
                       user.password,
-                      user.role
+                      user.role,
+                      user.vip
                     )
                   }
                 >
@@ -231,35 +258,46 @@ function Users() {
           ))}
         </tbody>
       </table>
+
       <nav aria-label="Page navigation example">
         <ul className="pagination justify-content-center">
-          <li className="page-item disabled">
+          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
             <a
               className="page-link"
               href="#"
-              tabindex="-1"
+              tabIndex="-1"
               aria-disabled="true"
+              onClick={() => setCurrentPage(currentPage - 1)}
             >
               <i className="fa-solid fa-arrow-left"></i>
             </a>
           </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              1
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              2
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              3
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <li
+              key={index}
+              className={`page-item ${
+                currentPage === index + 1 ? "active" : ""
+              }`}
+            >
+              <a
+                className="page-link"
+                href="#"
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </a>
+            </li>
+          ))}
+          <li
+            className={`page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }`}
+          >
+            <a
+              className="page-link"
+              href="#"
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
               <i className="fa-solid fa-arrow-right"></i>
             </a>
           </li>
@@ -343,6 +381,22 @@ function Users() {
                     </select>
                     {errors.role && (
                       <div className="invalid-feedback">{errors.role}</div>
+                    )}
+                  </div>
+                  <div class="form-group">
+                    <label>Gói Vip</label>
+                    <select
+                      class={`form-control ${errors.vip ? "is-invalid" : ""}`}
+                      value={vip}
+                      onChange={(e) => setVip(parseInt(e.target.value, 3))}
+                    >
+                      <option value={0}>Vip 0</option>
+                      <option value={1}>Vip 1</option>
+                      <option value={2}>Vip 2</option>
+                      <option value={3}>Vip 3</option>
+                    </select>
+                    {errors.vip && (
+                      <div className="invalid-feedback">{errors.vip}</div>
                     )}
                   </div>
                 </div>
@@ -440,6 +494,22 @@ function Users() {
                     </select>
                     {errors.role && (
                       <div className="invalid-feedback">{errors.role}</div>
+                    )}
+                  </div>
+                  <div class="form-group">
+                    <label>Gói Vip</label>
+                    <select
+                      class={`form-control ${errors.vip ? "is-invalid" : ""}`}
+                      value={vip}
+                      onChange={(e) => setVip(parseInt(e.target.value, 3))}
+                    >
+                      <option value={0}>Vip 0</option>
+                      <option value={1}>Vip 1</option>
+                      <option value={2}>Vip 2</option>
+                      <option value={3}>Vip 3</option>
+                    </select>
+                    {errors.vip && (
+                      <div className="invalid-feedback">{errors.vip}</div>
                     )}
                   </div>
                 </div>

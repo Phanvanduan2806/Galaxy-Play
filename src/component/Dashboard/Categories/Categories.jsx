@@ -12,12 +12,24 @@ import {
 
 function Categories(props) {
   const categoriesCollectionRef = collection(db, "categories");
-  const [categories, setCategories] = useState();
+  const [categories, setCategories] = useState([]);
   const [nameCategory, setNameCategory] = useState("");
   const [taskEdit, setTaskEdit] = useState("");
   const [edit, setEdit] = useState(null);
   const [errors, setErrors] = useState("");
   const [checkUpload, setCheckUpload] = useState(false);
+
+  // Phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(categories.length / itemsPerPage);
+
+  const CurrentPage = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return categories.slice(startIndex, endIndex);
+  };
+  const toShow = CurrentPage();
 
   // Bộ sưu tập categories
   useEffect(() => {
@@ -37,9 +49,9 @@ function Categories(props) {
   // Add
   const addCategory = async (e) => {
     e.preventDefault(); // Prevent the default form submission
-    if(!nameCategory) {
-          setErrors("Vui long nhap nam category");
-          return;
+    if (!nameCategory) {
+      setErrors("Vui long nhap nam category");
+      return;
     }
     try {
       // Add a new document to the "categories" collection
@@ -75,7 +87,6 @@ function Categories(props) {
   };
   // Biến function update task
   const updateTask = async (id) => {
-  
     if (taskEdit) {
       try {
         // Cập nhật tên danh mục mới cho danh mục phim
@@ -83,10 +94,8 @@ function Categories(props) {
         await updateDoc(categoryDocRef, {
           nameCategory: taskEdit,
         });
-   } catch (error) {
-     
-   }
-      
+      } catch (error) {}
+
       setEdit(null);
       setCheckUpload(!checkUpload);
     } else {
@@ -94,7 +103,7 @@ function Categories(props) {
     }
   };
 
-  console.log("check cte",categories);
+  console.log("check cte", categories);
 
   return (
     <>
@@ -142,11 +151,10 @@ function Categories(props) {
           </tr>
         </thead>
         <tbody>
-          { categories && categories.map((element, index) => (
-            <tr>
-              <th scope="row">{index + 1}</th>
+          {toShow.map((element, index) => (
+            <tr key={element.id}>
+              <th scope="row">{index + 1 + (currentPage - 1) * itemsPerPage}</th>
               <td>
-                {/* {element.nameCategory} */}
                 {edit === element.id ? (
                   <td>
                     <input
@@ -193,35 +201,46 @@ function Categories(props) {
           ))}
         </tbody>
       </table>
+      {/* Phân trang */}
       <nav aria-label="Page navigation example">
         <ul className="pagination justify-content-center">
-          <li className="page-item disabled">
+          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
             <a
               className="page-link"
               href="#"
-              tabindex="-1"
+              tabIndex="-1"
               aria-disabled="true"
+              onClick={() => setCurrentPage(currentPage - 1)}
             >
               <i className="fa-solid fa-arrow-left"></i>
             </a>
           </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              1
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              2
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              3
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <li
+              key={index}
+              className={`page-item ${
+                currentPage === index + 1 ? "active" : ""
+              }`}
+            >
+              <a
+                className="page-link"
+                href="#"
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </a>
+            </li>
+          ))}
+          <li
+            className={`page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }`}
+          >
+            <a
+              className="page-link"
+              href="#"
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
               <i className="fa-solid fa-arrow-right"></i>
             </a>
           </li>
@@ -252,17 +271,15 @@ function Categories(props) {
             <div className="modal-body">
               <input
                 type="text"
-                className={`form-control ${errors ? 'is-invalid' : ''}`}
+                className={`form-control ${errors ? "is-invalid" : ""}`}
                 placeholder="Name category"
                 aria-label="Recipient's username"
                 aria-describedby="button-addon2"
                 value={nameCategory}
                 name="add-category"
-                onChange={(e) => setNameCategory(e.target.value)}              
+                onChange={(e) => setNameCategory(e.target.value)}
               />
-              {errors && (
-                            <div className='invalid-feedback'>{errors}</div>
-                        )}
+              {errors && <div className="invalid-feedback">{errors}</div>}
             </div>
             <div className="modal-footer">
               <button

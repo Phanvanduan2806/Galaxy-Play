@@ -32,22 +32,26 @@ function Main() {
     fetchData();
   }, []);
   // Next scroll
-  const scrollNext = () => {
-    console.log("nhận");
-    document.getElementById("scroll").scrollBy({
-      top: 0,
-      left: scrollWidth,
-      behavior: "smooth",
-    });
+  const scrollNext = (carouselId) => {
+    const scrollElement = document.getElementById(carouselId);
+    if (scrollElement) {
+      scrollElement.scrollBy({
+        top: 0,
+        left: scrollWidth,
+        behavior: "smooth",
+      });
+    }
   };
   // Prev Scroll
-  const scrollPrev = () => {
-    console.log("nhận");
-    document.getElementById("scroll").scrollBy({
-      top: 0,
-      left: -scrollWidth,
-      behavior: "smooth",
-    });
+  const scrollPrev = (carouselId) => {
+    const scrollElement = document.getElementById(carouselId);
+    if (scrollElement) {
+      scrollElement.scrollBy({
+        top: 0,
+        left: -scrollWidth,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
@@ -90,7 +94,7 @@ function Main() {
                   alt="..."
                 />
                 {/* Body carousel */}
-                <div className="carousel-caption d-none d-md-block">
+                <div className="carousel-caption col-10 col-md-6 col-lg-4">
                   <h3 className="carousel__movies__title">Tro tàn rực rỡ</h3>
                   <div className="d-flex flex-wrap">
                     <button className="my__btn">
@@ -111,7 +115,7 @@ function Main() {
                     </button>
                   </div>
 
-                  <p className="carousel__des">
+                  <p className="carousel__des d-none d-md-block">
                     Lấy bối cảnh xóm nghèo miền Tây sông nước, qua lời dẫn
                     chuyện của Hậu, đạo diễn phác họa bi kịch những người vợ bị
                     những người đàn ông họ chọn gắn bó gây nhiều tổn thương suốt
@@ -204,51 +208,43 @@ function Main() {
           </div>
           <button
             className="btn__scroll btn__scroll__next"
-            onClick={scrollNext}
+            onClick={() => scrollNext("carousel1")}
           >
             <i className="fa-solid fa-chevron-right"></i>
           </button>
           <button
             className="btn__scroll btn__scroll__prev"
-            onClick={scrollPrev}
+            onClick={() => scrollPrev("carousel1")}
           >
             <i className="fa-solid fa-chevron-left"></i>
           </button>
           <div
             className="scrolling-wrapper row flex-row flex-nowrap ps-5"
-            id="scroll"
+            id="carousel1"
           >
-            
-                  
-              
-          
             {movies.map((element, index) => (
-              
               <Link
-              as={Link}
-              to={`/detail/${element.nameCategory}/${element.id}`}
-              className="col__scroll col-8 col-sm-5 col-md-4  col-lg-3 col-xl-2"
-              // href={element.navLink}
-            >
-              <div className="card card-block">
-                <img
-                  src={element.imageUpload}
-                  alt=""
-                />
-                <div className="card-block-hover">
-                  <i className="fa-solid fa-film"></i>
-                  <i className="fa-regular fa-circle-play play__movies"></i>
-                  <i className="fa-solid fa-plus"></i>
-                </div>
-                <div className="card-block-des">
-                  <p className="card-block-des-title">{element.nameMovie}</p>
-                  <div className="card-block-des-more">
-                    <p>{element.idCategory}</p>
-                    <p>{element.durationMovie} phút</p>
-                    <p>{element.episodeMovie} tập</p>
+                as={Link}
+                to={`/detail/${element.nameCategory}/${element.id}`}
+                className="col__scroll col-8 col-sm-5 col-md-4  col-lg-3 col-xl-2"
+                // href={element.navLink}
+              >
+                <div className="card card-block">
+                  <img src={element.imageUpload} alt="" />
+                  <div className="card-block-hover">
+                    <i className="fa-solid fa-film"></i>
+                    <i className="fa-regular fa-circle-play play__movies"></i>
+                    <i className="fa-solid fa-plus"></i>
+                  </div>
+                  <div className="card-block-des">
+                    <p className="card-block-des-title">{element.nameMovie}</p>
+                    <div className="card-block-des-more">
+                      <p>{element.idCategory}</p>
+                      <p>{element.durationMovie} phút</p>
+                      <p>{element.episodeMovie} tập</p>
+                    </div>
                   </div>
                 </div>
-              </div>
               </Link>
             ))}
           </div>
@@ -261,47 +257,43 @@ function Main() {
           </div>
           <button
             className="btn__scroll btn__scroll__next"
-            onClick={scrollNext}
+            onClick={() => scrollNext("carousel2")}
           >
             <i className="fa-solid fa-chevron-right"></i>
           </button>
           <button
             className="btn__scroll btn__scroll__prev"
-            onClick={scrollPrev}
+            onClick={() => scrollPrev("carousel2")}
           >
             <i className="fa-solid fa-chevron-left"></i>
           </button>
           <div
             className="scrolling-wrapper row flex-row flex-nowrap ps-5"
-            id="scroll"
+            id="carousel2"
           >
             {movies.map((element, index) => (
-              
               <Link
-              as={Link}
-              to={`/detail/${element.nameCategory}/${element.id}`}
-              className="col__scroll col-8 col-sm-5 col-md-4  col-lg-3 col-xl-2"
-              // href={element.navLink}
-            >
-              <div className="card card-block">
-                <img
-                  src={element.imageUpload}
-                  alt=""
-                />
-                <div className="card-block-hover">
-                  <i className="fa-solid fa-film"></i>
-                  <i className="fa-regular fa-circle-play play__movies"></i>
-                  <i className="fa-solid fa-plus"></i>
-                </div>
-                <div className="card-block-des">
-                  <p className="card-block-des-title">{element.nameMovie}</p>
-                  <div className="card-block-des-more">
-                    <p>{element.idCategory}</p>
-                    <p>{element.durationMovie} phút</p>
-                    <p>{element.episodeMovie} tập</p>
+                as={Link}
+                to={`/detail/${element.nameCategory}/${element.id}`}
+                className="col__scroll col-8 col-sm-5 col-md-4  col-lg-3 col-xl-2"
+                // href={element.navLink}
+              >
+                <div className="card card-block">
+                  <img src={element.imageUpload} alt="" />
+                  <div className="card-block-hover">
+                    <i className="fa-solid fa-film"></i>
+                    <i className="fa-regular fa-circle-play play__movies"></i>
+                    <i className="fa-solid fa-plus"></i>
+                  </div>
+                  <div className="card-block-des">
+                    <p className="card-block-des-title">{element.nameMovie}</p>
+                    <div className="card-block-des-more">
+                      <p>{element.idCategory}</p>
+                      <p>{element.durationMovie} phút</p>
+                      <p>{element.episodeMovie} tập</p>
+                    </div>
                   </div>
                 </div>
-              </div>
               </Link>
             ))}
           </div>

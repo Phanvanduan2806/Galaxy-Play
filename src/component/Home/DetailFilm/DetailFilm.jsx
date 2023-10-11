@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, Link, useParams } from "react-router-dom";
-import { db } from "../../../firebase";
+import { db, auth } from "../../../firebase";
 import { storage } from "../../../firebase"; // Make sure to import Firebase properly
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
@@ -18,13 +18,37 @@ import {
 import "./DetailFilm.scss";
 
 function DetailFilm(props) {
+  const { user } = props;
   const moviesCollectionRef = collection(db, "movies");
   const [movies, setmovies] = useState([]);
+  const usersCollectionRef = collection(db, "users");
+  const [users, setUsers] = useState([]);
   const [categoryMovie, setCategoryMovie] = useState([]);
   const [movieDetail, setMovieDetail] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
+  console.log("User", currentUser);
   const scrollWidth = window.innerWidth;
   const { name, id } = useParams();
+
+ // Lấy về user khi đăng nhập
+useEffect(() => {
+  const fetchData = async () => {
+    if (user) {
+      const querySnapshot = await getDocs(usersCollectionRef);
+      const usersData = [];
+      querySnapshot.forEach((doc) => {
+        usersData.push({ id: doc.id, ...doc.data() });
+      });
+      setUsers(usersData);
+
+      // Lấy về user khi đăng nhập
+      const currentUserDoc = usersData.find((element) => element.email === user.email);
+      setCurrentUser(currentUserDoc);
+    }
+  };
+  fetchData();
+}, [user]);
 
   // Bộ sưu tập movies
   useEffect(() => {
@@ -91,29 +115,32 @@ function DetailFilm(props) {
   }, [name]);
 
   // Next scroll
-  console.log(categoryMovie);
-  const scrollNext = () => {
-    console.log("nhận");
-    document.getElementById("scroll").scrollBy({
-      top: 0,
-      left: scrollWidth,
-      behavior: "smooth",
-    });
+  const scrollNext = (carouselId) => {
+    const scrollElement = document.getElementById(carouselId);
+    if (scrollElement) {
+      scrollElement.scrollBy({
+        top: 0,
+        left: scrollWidth,
+        behavior: "smooth",
+      });
+    }
   };
   // Prev Scroll
-  const scrollPrev = () => {
-    console.log("nhận");
-    document.getElementById("scroll").scrollBy({
-      top: 0,
-      left: -scrollWidth,
-      behavior: "smooth",
-    });
+  const scrollPrev = (carouselId) => {
+    const scrollElement = document.getElementById(carouselId);
+    if (scrollElement) {
+      scrollElement.scrollBy({
+        top: 0,
+        left: -scrollWidth,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
     <>
       <div className="detail-movie-page">
-        <div className='background' >
+        <div className="background">
           <div className="dynamic-tabs-detail">
             <ul className="nav-detail">
               <li className="nav__item text-white">Tổng quan</li>
@@ -121,7 +148,7 @@ function DetailFilm(props) {
               <li className="nav__item">Chi tiết</li>
             </ul>
           </div>
-          <div className="carousel-caption d-none d-md-block ">
+          <div className="carousel-caption col-10 col-md-6 col-lg-4">
             <h3 className="carousel__movies__title">{movieDetail.nameMovie}</h3>
             <div className="list-detail d-flex">
               <div className="list-item date-public">
@@ -138,7 +165,9 @@ function DetailFilm(props) {
                 <i className="fa-solid fa-heart"></i> <span>400</span>
               </div>
             </div>
-            <p className="carousel__des">{movieDetail.describeMovie}</p>
+            <p className="carousel__des d-none d-md-block">
+              {movieDetail.describeMovie}
+            </p>
             <div className="list-type d-flex">
               <p>Thể loại: </p>
               <p style={{ color: "gray", marginLeft: "1rem" }}>
@@ -147,9 +176,25 @@ function DetailFilm(props) {
             </div>
             <div className="d-flex">
               <button className="my__btn">
-                <i className="fa-solid fa-crown"></i>
-                <Link to='/play'><span className="ms-1">Đăng ký gói</span></Link>
+                {currentUser &&
+                currentUser.vip &&
+                currentUser.vip >= movieDetail.vipMovie ? (
+                  <>
+                    <i className="fa-solid fa-play"></i>
+                    <Link to={`/play/${movieDetail.nameCategory}/${movieDetail.id}`} className="text-decoration-none">
+                      <span className="ms-1 text-black">Xem Phim</span>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-solid fa-crown"></i>
+                    <Link to="/vip" className="text-decoration-none">
+                      <span className="ms-1 text-black">Đăng ký gói</span>
+                    </Link>
+                  </>
+                )}
               </button>
+
               <button
                 className="my__btn"
                 style={{
@@ -181,9 +226,6 @@ function DetailFilm(props) {
             <img className="img-thump-gray" src={movieDetail.imageUpload} />
           </div>
         </div>
-
- 
-        
       </div>
       <div className="ribbon-landscape">
         <div className="row p-0">
@@ -191,18 +233,25 @@ function DetailFilm(props) {
             Phim liên quan{" "}
           </p>
         </div>
-        <button className="btn__scroll btn__scroll__next" onClick={scrollNext}>
+        <button
+          className="btn__scroll btn__scroll__next"
+          onClick={() => scrollNext("carousel__detail")}
+        >
           <i className="fa-solid fa-chevron-right"></i>
         </button>
-        <button className="btn__scroll btn__scroll__prev" onClick={scrollPrev}>
+        <button
+          className="btn__scroll btn__scroll__prev"
+          onClick={() => scrollPrev("carousel__detail")}
+        >
           <i className="fa-solid fa-chevron-left"></i>
         </button>
         <div
           className="scrolling-wrapper row flex-row flex-nowrap ps-5"
-          id="scroll"
+          id="carousel__detail"
         >
           {categoryMovie.map((element, index) => (
             <Link
+              key={index}
               as={Link}
               to={`/detail/${element.nameCategory}/${element.id}`}
               className="col__scroll col-8 col-sm-5 col-md-4  col-lg-3 col-xl-2"

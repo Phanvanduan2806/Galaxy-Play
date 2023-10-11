@@ -27,11 +27,23 @@ function Film(props) {
   const [releaseMovie, setReleaseMovie] = useState(null);
   const [describeMovie, setDescribeMovie] = useState("");
   const [nameCategory, setNameCategory] = useState("");
-  const [vipMovie, setVipMovie] = useState(null);
+  const [vipMovie, setVipMovie] = useState(0);
   const [checkUpload, setCheckUpload] = useState(false);
   const [movieId, setMovieId] = useState(null);
   const [errors, setErrors] = useState({});
   // const [checkUpload, setCheckUpload] = useState(false);
+
+  // Phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
+  const totalPages = Math.ceil(movies.length / itemsPerPage);
+
+  const CurrentPage = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return movies.slice(startIndex, endIndex);
+  };
+  const toShow = CurrentPage();
 
   // Bộ sưu tập categories
   useEffect(() => {
@@ -201,7 +213,7 @@ function Film(props) {
         setLinkMovie("");
         setImageUpload(null);
         setImagePreview(null);
-        setVipMovie("");
+        setVipMovie(0);
         setCheckUpload(!checkUpload);
         alert("Cập nhật thành công");
       } else {
@@ -212,6 +224,9 @@ function Film(props) {
       console.error("Lỗi khi cập nhật phim:", error);
     }
   };
+  const clearModal = () => {
+    setImagePreview(null);
+  }
 
   return (
     <>
@@ -264,9 +279,9 @@ function Film(props) {
           </tr>
         </thead>
         <tbody>
-          {movies.map((element, index) => (
+          {toShow.map((element, index) => (
             <tr key={element.id}>
-              <th scope="row">{index + 1}</th>
+              <th scope="row">{index + 1 + (currentPage - 1) * itemsPerPage}</th>
               <td className="td__movie__preview">
                 <img src={element.imageUpload} alt="" />
               </td>
@@ -308,35 +323,46 @@ function Film(props) {
           ))}
         </tbody>
       </table>
+      {/* Phân trang */}
       <nav aria-label="Page navigation example">
         <ul className="pagination justify-content-center">
-          <li className="page-item disabled">
+          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
             <a
               className="page-link"
               href="#"
-              tabindex="-1"
+              tabIndex="-1"
               aria-disabled="true"
+              onClick={() => setCurrentPage(currentPage - 1)}
             >
               <i className="fa-solid fa-arrow-left"></i>
             </a>
           </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              1
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              2
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              3
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <li
+              key={index}
+              className={`page-item ${
+                currentPage === index + 1 ? "active" : ""
+              }`}
+            >
+              <a
+                className="page-link"
+                href="#"
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </a>
+            </li>
+          ))}
+          <li
+            className={`page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }`}
+          >
+            <a
+              className="page-link"
+              href="#"
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
               <i className="fa-solid fa-arrow-right"></i>
             </a>
           </li>
@@ -660,18 +686,14 @@ function Film(props) {
                   <div className="form-group">
                     <label>Images previews</label>
                     <div className="choose__image__preview">
-                      {imageUpload ? (
-                        <img src={imageUpload} alt="" />
-                      ) : (
-                        <img
-                          src={
-                            imagePreview
-                              ? imagePreview
-                              : "https://upload.wikimedia.org/wikipedia/vi/thumb/d/d8/Bi%E1%BB%83u_tr%C6%B0ng_Galaxy_Play.svg/1200px-Bi%E1%BB%83u_tr%C6%B0ng_Galaxy_Play.svg.png"
-                          }
-                          alt=""
-                        />
-                      )}
+                      <img
+                        src={
+                          imagePreview
+                            ? imagePreview
+                            : imageUpload
+                        }
+                        alt=""
+                      />
                     </div>
                     <input
                       type="file"
@@ -688,6 +710,7 @@ function Film(props) {
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
+                onClick={clearModal}
               >
                 Close
               </button>

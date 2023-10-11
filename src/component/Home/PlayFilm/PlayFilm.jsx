@@ -116,16 +116,16 @@ function PlayFilm(props) {
   };
   return (
     <>
-      <div className="detail-movie-page">
+      <div className="detail-movie-page" style={{ paddingTop: "80px" }}>
         <div className="background">
           <iframe
             width="100%"
-            height="100%"
-            src={element.linkMovie}
+            height="600vh"
+            src={movieDetail.linkMovie}
             title=""
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            className={xemPhim ? "d-block" : "d-none"}
+            allowfullscreen="true"
           ></iframe>
         </div>
       </div>

@@ -14,7 +14,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-function Login({ setLogin, setLoginAdmin }) {
+function Login({ setLogin, setLoginAdmin, setUser }) {
   const navigate = useNavigate();
   const usersCollectionRef = collection(db, "users");
   const [users, setUsers] = useState([]);
@@ -61,11 +61,10 @@ function Login({ setLogin, setLoginAdmin }) {
   const handleRememberMeChange = (e) => {
     setRememberMe(!rememberMe); // Khi checkbox thay đổi, cập nhật trạng thái
   };
-  //Han del login
+  //Handel login
   const handleLogin = (e) => {
     e.preventDefault();
     const newErrors = {};
-
     // Kiểm tra email và mật khẩu hợp lệ
     const isValidUser = users.some((element) => {
       return element.email === email && element.password === password;
@@ -94,9 +93,14 @@ function Login({ setLogin, setLoginAdmin }) {
         // Ví dụ: redirect đến trang admin
         setLoginAdmin(true);
         navigate("/dashboard");
+       
       } else {
         // Người dùng không có quyền truy cập admin
         navigate("/");
+        const userLogin = {
+          email: email
+        }
+        setUser(userLogin);
       }
 
       setLogin(true);
