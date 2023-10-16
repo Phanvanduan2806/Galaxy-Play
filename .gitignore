@@ -1,4 +1,4 @@
 # Bỏ qua thư mục node_modules
-/node_modules
+
 # Bỏ thư mục image_load
 /image_load
