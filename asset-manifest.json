@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/Galaxy-Play/static/css/main.7f448df5.css",
+    "main.js": "/Galaxy-Play/static/js/main.8e17d750.js",
+    "static/js/787.a7c7e0bc.chunk.js": "/Galaxy-Play/static/js/787.a7c7e0bc.chunk.js",
+    "static/media/bg-onboarding.jpg": "/Galaxy-Play/static/media/bg-onboarding.9317ba536c758c1c12d4.jpg",
+    "static/media/logo.svg": "/Galaxy-Play/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/Galaxy-Play/index.html",
+    "main.7f448df5.css.map": "/Galaxy-Play/static/css/main.7f448df5.css.map",
+    "main.8e17d750.js.map": "/Galaxy-Play/static/js/main.8e17d750.js.map",
+    "787.a7c7e0bc.chunk.js.map": "/Galaxy-Play/static/js/787.a7c7e0bc.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7f448df5.css",
+    "static/js/main.8e17d750.js"
+  ]
+}
